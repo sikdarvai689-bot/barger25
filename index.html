@@ -16,22 +16,19 @@ body{
  padding:15px;
 }
 
-.container{
- max-width:650px;
- margin:auto;
-}
+.container{max-width:700px;margin:auto}
 
 .header{
  background:#202b3c;
  color:white;
- padding:25px 18px;
+ padding:25px 15px;
  border-radius:15px;
  text-align:center;
- margin-bottom:18px;
+ margin-bottom:16px;
 }
 
 .header h2{font-size:23px;margin-bottom:7px}
-.header p{color:#ddd;font-size:13px}
+.header p{color:#ddd;font-size:14px}
 
 .card{
  background:white;
@@ -41,26 +38,27 @@ body{
  box-shadow:0 2px 10px #0000000b;
 }
 
-.date-row{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:10px;
- flex-wrap:wrap;
-}
+.section-title{font-size:18px;margin-bottom:15px}
 
-input,select{
+input{
  width:100%;
  padding:12px;
  border:1px solid #ddd;
  border-radius:8px;
  font-size:15px;
  margin-top:7px;
- outline:none;
+ margin-bottom:13px;
 }
 
-label{
- font-size:14px;
+label{font-size:14px;font-weight:bold}
+
+.date-bangla{
+ background:#f0f4fa;
+ border-radius:9px;
+ padding:12px;
+ margin-top:12px;
+ text-align:center;
+ color:#1769aa;
  font-weight:bold;
 }
 
@@ -72,14 +70,14 @@ label{
 }
 
 .box{
- padding:16px 10px;
+ padding:17px 8px;
  border-radius:11px;
  background:#f4f6fa;
  text-align:center;
 }
 
 .box small{color:#666}
-.box h2{margin-top:9px;font-size:22px}
+.box h2{margin-top:9px;font-size:21px}
 
 .green{color:#16864b}
 .red{color:#dc3545}
@@ -104,15 +102,16 @@ button{
  padding:12px;
  border-radius:8px;
  cursor:pointer;
- font-size:15px;
+ font-size:14px;
  font-weight:bold;
  color:white;
 }
 
-.btn-sale{background:#16864b;width:100%;margin-top:12px}
-.btn-expense{background:#dc3545;width:100%;margin-top:12px}
-.btn-save{background:#1769aa;width:100%;margin-top:12px}
-.delete{background:#dc3545;padding:7px 10px;font-size:12px}
+.btn-sale{background:#16864b;width:100%;margin-top:5px}
+.btn-expense{background:#dc3545;width:100%;margin-top:5px}
+.btn-report{background:#1769aa;width:100%;margin-top:12px}
+.btn-print{background:#202b3c;width:100%;margin-top:12px}
+.btn-delete{background:#dc3545;padding:7px 10px;font-size:12px}
 
 .entry{
  display:flex;
@@ -124,22 +123,31 @@ button{
 }
 
 .entry:last-child{border:0}
-
 .entry small{color:#777}
 .entry strong{display:block;margin-bottom:5px}
 
-.section-title{
- font-size:17px;
- margin-bottom:14px;
-}
-
-.history{
+.report-row{
  display:flex;
- gap:8px;
- align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ padding:12px 4px;
+ border-bottom:1px solid #eee;
+ font-size:14px;
 }
 
-.history input{flex:1}
+.report-row.total{
+ font-weight:bold;
+ font-size:16px;
+ background:#f0f7f2;
+ padding:15px 8px;
+}
+
+.report-date{
+ text-align:center;
+ margin-bottom:12px;
+ color:#1769aa;
+ font-weight:bold;
+}
 
 .footer{
  text-align:center;
@@ -149,8 +157,18 @@ button{
 }
 
 @media(max-width:400px){
- .box h2{font-size:19px}
+ .box h2{font-size:18px}
  .header h2{font-size:20px}
+}
+
+@media print{
+ body{background:white;padding:0}
+ .container{max-width:100%}
+ .header{background:#eee!important;color:#111!important}
+ .header p{color:#333!important}
+ .no-print{display:none!important}
+ .card{box-shadow:none;border:1px solid #ddd}
+ .report-row{break-inside:avoid}
 }
 </style>
 </head>
@@ -162,23 +180,28 @@ button{
 <div class="header">
  <h2>🍔 HAMBURGER CAFE</h2>
  <p>AND FAST FOOD</p>
- <p style="margin-top:8px">দৈনিক আয়-ব্যয়ের হিসাব</p>
+ <p style="margin-top:9px">দৈনিক আয়-ব্যয়ের হিসাব</p>
 </div>
 
-<div class="card">
- <div class="date-row">
-  <label>📅 হিসাবের তারিখ</label>
-  <input type="date" id="date" style="width:auto">
- </div>
+<!-- তারিখ -->
+
+<div class="card no-print">
+ <label>📅 হিসাবের তারিখ নির্বাচন করুন</label>
+ <input type="date" id="date">
+
+ <div class="date-bangla" id="banglaDate"></div>
 </div>
 
-<div class="card">
- <h3 class="section-title">💰 ক্যাশ হিসাব</h3>
+<!-- ক্যাশ হিসাব -->
 
- <label>শুরুর ক্যাশ (Opening Cash)</label>
- <input type="number" id="opening" placeholder="শুরুর ক্যাশ লিখুন" min="0">
+<div class="card">
+ <h3 class="section-title">💰 দৈনিক ক্যাশ হিসাব</h3>
+
+ <label>শুরুর ক্যাশ</label>
+ <input type="number" id="opening" min="0">
 
  <div class="summary">
+
   <div class="box">
    <small>মোট বিক্রি</small>
    <h2 class="green" id="sales">৳ ০</h2>
@@ -188,52 +211,114 @@ button{
    <small>মোট খরচ</small>
    <h2 class="red" id="expenses">৳ ০</h2>
   </div>
+
+  <div class="box">
+   <small>মোট জমা টাকা</small>
+   <h2 class="blue" id="totalCash">৳ ০</h2>
+  </div>
+
+  <div class="box">
+   <small>অবশিষ্ট ক্যাশ</small>
+   <h2 class="green" id="balanceSmall">৳ ০</h2>
+  </div>
+
  </div>
 
  <div class="final">
-  <small>আজকের মোট ক্যাশ</small>
+  <small>আজকের অবশিষ্ট ক্যাশ</small>
   <h1 id="balance">৳ ০</h1>
  </div>
 </div>
 
-<div class="card">
+<!-- বিক্রি -->
+
+<div class="card no-print">
  <h3 class="section-title">🟢 নতুন বিক্রি যোগ করুন</h3>
+
  <label>বিক্রির বিবরণ</label>
  <input id="saleNote" placeholder="যেমন: বার্গার বিক্রি">
 
  <label>বিক্রির টাকা</label>
- <input type="number" id="saleAmount" placeholder="টাকার পরিমাণ" min="0">
+ <input type="number" id="saleAmount" min="0" placeholder="টাকার পরিমাণ">
 
  <button class="btn-sale" onclick="addEntry('sale')">
  + বিক্রি যোগ করুন
  </button>
 </div>
 
-<div class="card">
+<!-- খরচ -->
+
+<div class="card no-print">
  <h3 class="section-title">🔴 নতুন খরচ যোগ করুন</h3>
+
  <label>খরচের বিবরণ</label>
  <input id="expenseNote" placeholder="যেমন: বাজার খরচ">
 
  <label>খরচের টাকা</label>
- <input type="number" id="expenseAmount" placeholder="টাকার পরিমাণ" min="0">
+ <input type="number" id="expenseAmount" min="0" placeholder="টাকার পরিমাণ">
 
  <button class="btn-expense" onclick="addEntry('expense')">
  + খরচ যোগ করুন
  </button>
 </div>
 
+<!-- লেনদেন -->
+
 <div class="card">
  <h3 class="section-title">📋 আজকের লেনদেন</h3>
  <div id="entries"></div>
 </div>
 
-<div class="card">
- <h3 class="section-title">📆 আগের দিনের হিসাব</h3>
- <div class="history">
-  <input type="date" id="historyDate">
-  <button class="btn-save" onclick="showHistory()">দেখুন</button>
+<!-- রিপোর্ট -->
+
+<div class="card" id="dailyReport">
+ <h3 class="section-title">📊 দৈনিক পূর্ণাঙ্গ রিপোর্ট</h3>
+
+ <div class="report-date" id="reportDate"></div>
+
+ <div class="report-row">
+  <span>শুরুর ক্যাশ</span>
+  <strong id="rOpening">৳ ০</strong>
  </div>
- <div id="historyResult" style="margin-top:15px"></div>
+
+ <div class="report-row">
+  <span>মোট বিক্রি (+)</span>
+  <strong class="green" id="rSales">৳ ০</strong>
+ </div>
+
+ <div class="report-row">
+  <span>মোট জমা টাকা</span>
+  <strong id="rTotal">৳ ০</strong>
+ </div>
+
+ <div class="report-row">
+  <span>মোট খরচ (-)</span>
+  <strong class="red" id="rExpenses">৳ ০</strong>
+ </div>
+
+ <div class="report-row total">
+  <span>অবশিষ্ট ক্যাশ</span>
+  <strong class="green" id="rBalance">৳ ০</strong>
+ </div>
+
+ <button class="btn-print no-print" onclick="printReport()">
+  🖨️ দৈনিক রিপোর্ট প্রিন্ট করুন
+ </button>
+</div>
+
+<!-- পুরোনো হিসাব -->
+
+<div class="card no-print">
+ <h3 class="section-title">📆 আগের দিনের রিপোর্ট</h3>
+
+ <label>তারিখ নির্বাচন করুন</label>
+ <input type="date" id="historyDate">
+
+ <button class="btn-report" onclick="showHistory()">
+ রিপোর্ট দেখুন
+ </button>
+
+ <div id="historyResult"></div>
 </div>
 
 <div class="footer">
@@ -245,51 +330,78 @@ button{
 
 <script>
 
-let database = JSON.parse(
- localStorage.getItem("cafeDatabase") || "{}"
+let database=JSON.parse(
+ localStorage.getItem("cafeDatabase")||"{}"
 );
 
-const dateInput = document.getElementById("date");
-const openingInput = document.getElementById("opening");
+const dateInput=document.getElementById("date");
+const openingInput=document.getElementById("opening");
 
 function today(){
- const d = new Date();
- const offset = d.getTimezoneOffset();
+ const d=new Date();
+ const offset=d.getTimezoneOffset();
  return new Date(d.getTime()-offset*60000)
  .toISOString().slice(0,10);
 }
 
-dateInput.value = today();
+// বাংলা তারিখ ও বার
+
+function banglaDate(date){
+
+ const d=new Date(date+"T12:00:00");
+
+ return new Intl.DateTimeFormat(
+  "bn-BD-u-ca-beng",
+  {
+   weekday:"long",
+   day:"numeric",
+   month:"long",
+   year:"numeric"
+  }
+ ).format(d);
+}
+
+function formatMoney(amount){
+ return "৳ "+Number(amount).toLocaleString("bn-BD");
+}
 
 function getData(date){
+
  if(!database[date]){
   database[date]={
    opening:null,
    entries:[]
   };
  }
+
  return database[date];
 }
 
+// আগের দিনের অবশিষ্ট টাকা
+
 function previousBalance(date){
- const dates = Object.keys(database)
+
+ const dates=Object.keys(database)
  .filter(d=>d<date)
  .sort()
  .reverse();
 
- if(!dates.length) return 0;
+ if(!dates.length)return 0;
 
- let previous = database[dates[0]];
- let sales = previous.entries
-  .filter(e=>e.type==="sale")
-  .reduce((s,e)=>s+e.amount,0);
+ const previous=database[dates[0]];
 
- let expenses = previous.entries
-  .filter(e=>e.type==="expense")
-  .reduce((s,e)=>s+e.amount,0);
+ const sales=previous.entries
+ .filter(e=>e.type==="sale")
+ .reduce((s,e)=>s+Number(e.amount),0);
 
- return (previous.opening || 0)+sales-expenses;
+ const expenses=previous.entries
+ .filter(e=>e.type==="expense")
+ .reduce((s,e)=>s+Number(e.amount),0);
+
+ return Number(previous.opening||0)+sales-expenses;
 }
+
+// ডাটা সেভ
 
 function save(){
  localStorage.setItem(
@@ -298,12 +410,14 @@ function save(){
  );
 }
 
+// দৈনিক হিসাব
+
 function calculate(){
 
- const date = dateInput.value;
- if(!date) return;
+ const date=dateInput.value;
+ if(!date)return;
 
- const data = getData(date);
+ const data=getData(date);
 
  if(data.opening===null){
   data.opening=previousBalance(date);
@@ -313,26 +427,40 @@ function calculate(){
 
  const sales=data.entries
  .filter(e=>e.type==="sale")
- .reduce((s,e)=>s+e.amount,0);
+ .reduce((s,e)=>s+Number(e.amount),0);
 
  const expenses=data.entries
  .filter(e=>e.type==="expense")
- .reduce((s,e)=>s+e.amount,0);
+ .reduce((s,e)=>s+Number(e.amount),0);
 
- const balance=data.opening+sales-expenses;
+ const opening=Number(data.opening);
+ const total=opening+sales;
+ const balance=total-expenses;
 
- document.getElementById("sales").innerText=
- "৳ "+sales.toLocaleString("en-IN");
+ document.getElementById("sales").innerText=formatMoney(sales);
+ document.getElementById("expenses").innerText=formatMoney(expenses);
+ document.getElementById("totalCash").innerText=formatMoney(total);
+ document.getElementById("balanceSmall").innerText=formatMoney(balance);
+ document.getElementById("balance").innerText=formatMoney(balance);
 
- document.getElementById("expenses").innerText=
- "৳ "+expenses.toLocaleString("en-IN");
+ document.getElementById("banglaDate").innerText=banglaDate(date);
 
- document.getElementById("balance").innerText=
- "৳ "+balance.toLocaleString("en-IN");
+ // রিপোর্ট
+
+ document.getElementById("reportDate").innerText=
+ "তারিখ: "+banglaDate(date);
+
+ document.getElementById("rOpening").innerText=formatMoney(opening);
+ document.getElementById("rSales").innerText=formatMoney(sales);
+ document.getElementById("rTotal").innerText=formatMoney(total);
+ document.getElementById("rExpenses").innerText=formatMoney(expenses);
+ document.getElementById("rBalance").innerText=formatMoney(balance);
 
  renderEntries();
  save();
 }
+
+// বিক্রি ও খরচ যোগ
 
 function addEntry(type){
 
@@ -347,7 +475,7 @@ function addEntry(type){
  const amount=Number(amountInput.value);
  const note=noteInput.value.trim();
 
- if(!amountInput.value || amount<=0){
+ if(!amountInput.value||!Number.isFinite(amount)||amount<=0){
   alert("সঠিক টাকার পরিমাণ লিখুন");
   return;
  }
@@ -355,9 +483,9 @@ function addEntry(type){
  const data=getData(dateInput.value);
 
  data.entries.push({
-  id:Date.now(),
+  id:Date.now()+Math.random(),
   type:type,
-  note:note || (type==="sale"?"বিক্রি":"খরচ"),
+  note:note||(type==="sale"?"বিক্রি":"খরচ"),
   amount:amount
  });
 
@@ -367,31 +495,7 @@ function addEntry(type){
  calculate();
 }
 
-function renderEntries(){
-
- const data=getData(dateInput.value);
- const box=document.getElementById("entries");
-
- if(data.entries.length===0){
-  box.innerHTML="<p style='color:#888;text-align:center'>আজ কোনো লেনদেন নেই</p>";
-  return;
- }
-
- box.innerHTML=data.entries.map(e=>`
-  <div class="entry">
-   <div>
-    <strong>${escapeHTML(e.note)}</strong>
-    <small>${e.type==="sale"?"বিক্রি":"খরচ"}</small>
-   </div>
-   <div style="text-align:right">
-    <strong class="${e.type==="sale"?"green":"red"}">
-     ${e.type==="sale"?"+":"-"} ৳${e.amount.toLocaleString("en-IN")}
-    </strong>
-    <button class="delete" onclick="removeEntry(${e.id})">মুছুন</button>
-   </div>
-  </div>
- `).join("");
-}
+// লেনদেন দেখানো
 
 function escapeHTML(str){
  return String(str).replace(/[&<>"']/g,c=>({
@@ -403,27 +507,150 @@ function escapeHTML(str){
  }[c]));
 }
 
-function removeEntry(id){
- if(!confirm("এই লেনদেনটি মুছে ফেলবেন?"))return;
+function renderEntries(){
 
  const data=getData(dateInput.value);
- data.entries=data.entries.filter(e=>e.id!==id);
+ const box=document.getElementById("entries");
+
+ if(data.entries.length===0){
+  box.innerHTML="<p style='text-align:center;color:#888'>আজ কোনো লেনদেন নেই</p>";
+  return;
+ }
+
+ box.innerHTML=data.entries.map(e=>`
+  <div class="entry">
+   <div>
+    <strong>${escapeHTML(e.note)}</strong>
+    <small>${e.type==="sale"?"বিক্রি":"খরচ"}</small>
+   </div>
+
+   <div style="text-align:right">
+    <strong class="${e.type==="sale"?"green":"red"}">
+     ${e.type==="sale"?"+":"-"} ${formatMoney(e.amount)}
+    </strong>
+
+    <button class="btn-delete no-print"
+     onclick="removeEntry('${e.id}')">
+     মুছুন
+    </button>
+   </div>
+  </div>
+ `).join("");
+}
+
+// লেনদেন মুছে ফেলা
+
+function removeEntry(id){
+
+ if(!confirm("এই লেনদেন মুছে ফেলবেন?"))return;
+
+ const data=getData(dateInput.value);
+
+ data.entries=data.entries.filter(
+  e=>String(e.id)!==String(id)
+ );
+
  calculate();
 }
 
+// শুরুর ক্যাশ পরিবর্তন
+
 openingInput.addEventListener("change",()=>{
+
  const amount=Number(openingInput.value);
 
- if(amount<0){
-  alert("নেগেটিভ টাকা দেওয়া যাবে না");
+ if(!openingInput.value||!Number.isFinite(amount)||amount<0){
+  alert("সঠিক শুরুর ক্যাশ লিখুন");
+  calculate();
   return;
  }
 
  getData(dateInput.value).opening=amount;
+
  calculate();
 });
 
 dateInput.addEventListener("change",calculate);
+
+// প্রিন্ট রিপোর্ট
+
+function printReport(){
+
+ const date=dateInput.value;
+ const data=getData(date);
+
+ const sales=data.entries
+ .filter(e=>e.type==="sale")
+ .reduce((s,e)=>s+Number(e.amount),0);
+
+ const expenses=data.entries
+ .filter(e=>e.type==="expense")
+ .reduce((s,e)=>s+Number(e.amount),0);
+
+ const opening=Number(data.opening||0);
+ const total=opening+sales;
+ const balance=total-expenses;
+
+ const rows=data.entries.map(e=>`
+  <tr>
+   <td>${escapeHTML(e.note)}</td>
+   <td>${e.type==="sale"?"বিক্রি":"খরচ"}</td>
+   <td>${formatMoney(e.amount)}</td>
+  </tr>
+ `).join("");
+
+ const win=window.open("","_blank");
+
+ if(!win){
+  alert("প্রিন্ট করার জন্য ব্রাউজারের পপআপ অনুমতি দিন");
+  return;
+ }
+
+ win.document.write(`
+ <!DOCTYPE html>
+ <html lang="bn">
+ <head>
+ <meta charset="UTF-8">
+ <title>Daily Cafe Report</title>
+ <style>
+ body{font-family:Arial,sans-serif;padding:25px;color:#222}
+ h2,h3{text-align:center}
+ p{text-align:center}
+ table{width:100%;border-collapse:collapse;margin-top:20px}
+ td,th{border:1px solid #ddd;padding:10px;text-align:left}
+ .summary{margin-top:25px;line-height:2}
+ .total{font-size:19px;font-weight:bold}
+ </style>
+ </head>
+ <body>
+ <h2>🍔 HAMBURGER CAFE & FAST FOOD</h2>
+ <h3>দৈনিক আয়-ব্যয়ের রিপোর্ট</h3>
+ <p>${banglaDate(date)}</p>
+
+ <div class="summary">
+ শুরুর ক্যাশ: ${formatMoney(opening)}<br>
+ মোট বিক্রি: ${formatMoney(sales)}<br>
+ মোট জমা টাকা: ${formatMoney(total)}<br>
+ মোট খরচ: ${formatMoney(expenses)}<br>
+ <div class="total">অবশিষ্ট ক্যাশ: ${formatMoney(balance)}</div>
+ </div>
+
+ <h3>লেনদেনের বিস্তারিত</h3>
+ <table>
+ <tr><th>বিবরণ</th><th>ধরন</th><th>টাকা</th></tr>
+ ${rows||"<tr><td colspan='3'>কোনো লেনদেন নেই</td></tr>"}
+ </table>
+
+ <p style="margin-top:35px">ধন্যবাদ</p>
+ <script>window.onload=function(){window.print()}<\/script>
+ </body>
+ </html>
+ `);
+
+ win.document.close();
+}
+
+// আগের দিনের রিপোর্ট
 
 function showHistory(){
 
@@ -438,31 +665,56 @@ function showHistory(){
 
  if(!data){
   document.getElementById("historyResult").innerHTML=
-  "এই তারিখে কোনো হিসাব পাওয়া যায়নি";
+  "<p style='margin-top:15px;color:#dc3545'>এই তারিখে কোনো হিসাব পাওয়া যায়নি</p>";
   return;
  }
 
  const sales=data.entries
  .filter(e=>e.type==="sale")
- .reduce((s,e)=>s+e.amount,0);
+ .reduce((s,e)=>s+Number(e.amount),0);
 
  const expenses=data.entries
  .filter(e=>e.type==="expense")
- .reduce((s,e)=>s+e.amount,0);
+ .reduce((s,e)=>s+Number(e.amount),0);
 
- const opening=data.opening||0;
- const balance=opening+sales-expenses;
+ const opening=Number(data.opening||0);
+ const total=opening+sales;
+ const balance=total-expenses;
 
  document.getElementById("historyResult").innerHTML=`
-  <p>শুরুর ক্যাশ: ৳${opening.toLocaleString("en-IN")}</p>
-  <p style="color:green;margin-top:8px">মোট বিক্রি: ৳${sales.toLocaleString("en-IN")}</p>
-  <p style="color:red;margin-top:8px">মোট খরচ: ৳${expenses.toLocaleString("en-IN")}</p>
-  <h3 style="margin-top:12px;color:#16864b">
-   ক্লোজিং ক্যাশ: ৳${balance.toLocaleString("en-IN")}
-  </h3>
+  <div style="margin-top:18px">
+   <div class="report-date">${banglaDate(date)}</div>
+
+   <div class="report-row">
+    <span>শুরুর ক্যাশ</span>
+    <strong>${formatMoney(opening)}</strong>
+   </div>
+
+   <div class="report-row">
+    <span>মোট বিক্রি</span>
+    <strong class="green">${formatMoney(sales)}</strong>
+   </div>
+
+   <div class="report-row">
+    <span>মোট জমা টাকা</span>
+    <strong>${formatMoney(total)}</strong>
+   </div>
+
+   <div class="report-row">
+    <span>মোট খরচ</span>
+    <strong class="red">${formatMoney(expenses)}</strong>
+   </div>
+
+   <div class="report-row total">
+    <span>অবশিষ্ট ক্যাশ</span>
+    <strong class="green">${formatMoney(balance)}</strong>
+   </div>
+  </div>
  `;
+
 }
 
+dateInput.value=today();
 calculate();
 
 </script>
